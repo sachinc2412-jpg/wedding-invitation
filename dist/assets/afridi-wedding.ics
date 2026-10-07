@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Afridi Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:afridi-wedding-20261106@invitation.local
+DTSTAMP:20261007T114600Z
+DTSTART:20261106T123000Z
+DTEND:20261106T153000Z
+SUMMARY:Afridi & Bride - Wedding
+DESCRIPTION:Join us to celebrate the wedding of Afridi and Bride.\nNikah: 6
+ :00 PM. Dinner: 7:30 PM. India time (IST\, UTC+5:30).
+LOCATION:Wedding venue name\, India
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR
