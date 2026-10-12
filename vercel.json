@@ -3,7 +3,7 @@
   "outputDirectory": "dist",
   "buildCommand": null,
   "installCommand": null,
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
       "has": [
@@ -12,7 +12,8 @@
           "value": "afridi-walima.vercel.app"
         }
       ],
-      "destination": "/walima/index.html"
+      "destination": "/walima/",
+      "permanent": false
     }
   ]
 }
