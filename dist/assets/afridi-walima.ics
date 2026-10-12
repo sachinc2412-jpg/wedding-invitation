@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Afridi and Sauleha//Wedding Invitation//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:afridi-sauleha-walima-2026@afridi-wedding.vercel.app
+DTSTAMP:20261012T090000Z
+DTSTART:20261108T113000Z
+SUMMARY:Dawat-e-Walima — Afridi Salim Sayyed & Sauleha (Dua) Rashid Khan
+LOCATION:ZIYON EVENTS Banquet Hall\, Bata Chowk\, Jammu Kashmir Bank\, MG R
+ oad\, Pune Cantonment\, Pune\, Maharashtra 411001
+DESCRIPTION:Dawat-e-Walima (Reception) of Afridi Salim Sayyed & Sauleha (Du
+ a) Rashid Khan. After Namaz-e-Asar\, from 5:00 PM onwards (Indian Standard
+  Time\, UTC+05:30). End time is not specified. Venue: ZIYON EVENTS Banquet
+  Hall. Bata Chowk\, Jammu Kashmir Bank\, MG Road\, Pune Cantonment\, Pune\
+ , Maharashtra 411001.
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

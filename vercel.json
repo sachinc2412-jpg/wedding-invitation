@@ -2,5 +2,17 @@
   "framework": null,
   "outputDirectory": "dist",
   "buildCommand": null,
-  "installCommand": null
+  "installCommand": null,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "afridi-walima.vercel.app"
+        }
+      ],
+      "destination": "/walima/index.html"
+    }
+  ]
 }

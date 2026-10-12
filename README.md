@@ -1,27 +1,14 @@
-# Afridi Wedding Invitation
+# Afridi & Sauleha — Wedding Invitations
 
-An interactive wedding invitation with a curtain reveal, scratch-to-reveal date, countdown, and Google/Apple Calendar links.
+Two independent static invitations share the original curtain, floral artwork, scratch reveal, and music controls.
 
-## Deploy on Vercel
+- Nikah: `/` or `/nikah/`, Friday, 6 November 2026.
+- Dawat-e-Walima: `/walima/`, Sunday, 8 November 2026. The Walima hostname is routed here by `vercel.json`.
+- Both: after Namaz-e-Asar, from 5:00 PM onwards, Asia/Kolkata (IST).
+- Venue: ZIYON EVENTS Banquet Hall, Bata Chowk, Jammu Kashmir Bank, MG Road, Pune Cantonment, Pune, Maharashtra 411001.
 
-Import this repository and use the included `vercel.json`. This is a static HTML/CSS/JavaScript site with output directory `dist`; no build or installation step is required.
+Calendar events use 11:30 UTC, equivalent to 17:00 IST. No end time has been supplied; the ICS events omit DTEND and the Google Calendar template uses a zero-duration event, with the open-ended timing in its description.
 
-## Invitation details
+RSVP responses remain local to each visitor's device, stored separately for Nikah and Walima; they are not sent to the couple.
 
-- Date: Friday, 6 November 2026
-- Ceremony: 6:00 PM IST
-- Dinner: 7:30 PM IST
-- Location: India
-
-The bride name and venue still need the final details. Keep visible copy in `dist/index.html`, countdown in `dist/app.js`, and the Google Calendar URL / `dist/assets/afridi-wedding.ics` consistent when updating these details.
-
-## RSVP
-
-The current RSVP saves on the visitor's device using localStorage. It does not send responses to the couple or a server.
-
-## Files
-
-- `dist/index.html`: invitation content and embedded critical cover artwork
-- `dist/style.css`: layout and animations
-- `dist/app.js`: reveal, scratch, countdown, local RSVP, and music controls
-- `dist/assets`: artwork, fonts, and Apple Calendar event
+Deploy the repository on Vercel using the included configuration. Output is `dist`; no build or install step is required.

@@ -1,18 +1,19 @@
 'use strict';
 const body=document.body,cover=document.querySelector('#cover'),content=document.querySelector('#content');
 body.classList.add('locked');
-// The first visible cover is the decoded, embedded artwork, never its fallback.
+// Show the opening only after its cover and medallion artwork decode.
+const sealReady=new Promise(resolve=>{const seal=new Image();seal.onload=async()=>{try{await seal.decode()}catch{}resolve()};seal.onerror=resolve;seal.src='/assets/seal-medallion.webp'});
 const coverImage=new Image();
-coverImage.onload=async()=>{if(coverImage.decode){try{await coverImage.decode()}catch{}}requestAnimationFrame(()=>body.classList.add('cover-art-ready'));};
+coverImage.onload=async()=>{if(coverImage.decode){try{await coverImage.decode()}catch{}}await sealReady;requestAnimationFrame(()=>body.classList.add('cover-art-ready'));};
 coverImage.onerror=()=>body.classList.add('cover-art-ready');
 const coverSource=document.querySelector('#initial-cover-art').textContent.match(/url\("([^"]+)"\)/);
-coverImage.src=coverSource?coverSource[1]:'assets/cover-luxe.webp';
+coverImage.src=coverSource?coverSource[1]:'/assets/cover-luxe.webp';
 
 let opening=false,openingTimers=[];
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const skipButton=document.querySelector('#skip-intro');
 // Load the decorative layers before the cover opens, preventing a blank reveal.
-const artworkReady=Promise.all(['assets/silk-valance.webp','assets/curtain-silk.webp','assets/garden.webp','assets/heart-blush-pearl.webp'].map(src=>new Promise(resolve=>{const image=new Image();image.onload=image.onerror=resolve;image.src=src;})));
+const artworkReady=Promise.all(['/assets/silk-valance.webp','/assets/curtain-silk.webp','/assets/garden.webp','/assets/heart-blush-pearl.webp'].map(src=>new Promise(resolve=>{const image=new Image();image.onload=image.onerror=resolve;image.src=src;})));
 function later(fn,delay){openingTimers.push(setTimeout(fn,delay));}
 function finishReveal(){openingTimers.forEach(clearTimeout);openingTimers=[];body.classList.add('opened','revealing','reveal-complete');cover.classList.add('gone');content.inert=false;body.classList.remove('locked');skipButton.hidden=true;document.querySelector('#toolbar').hidden=false;document.querySelector('h1').focus({preventScroll:true});}
 async function openInvitation(){
@@ -33,12 +34,13 @@ document.querySelector('#replay').addEventListener('click',()=>{
  openingTimers.forEach(clearTimeout);openingTimers=[];
  window.scrollTo({top:0,behavior:'instant'});content.inert=true;
  body.classList.add('replay-reset');body.classList.remove('opened','revealing','reveal-complete');body.classList.add('locked');
-// The first visible cover is the decoded, embedded artwork, never its fallback.
+// Show the opening only after its cover and medallion artwork decode.
+const sealReady=new Promise(resolve=>{const seal=new Image();seal.onload=async()=>{try{await seal.decode()}catch{}resolve()};seal.onerror=resolve;seal.src='/assets/seal-medallion.webp'});
 const coverImage=new Image();
-coverImage.onload=async()=>{if(coverImage.decode){try{await coverImage.decode()}catch{}}requestAnimationFrame(()=>body.classList.add('cover-art-ready'));};
+coverImage.onload=async()=>{if(coverImage.decode){try{await coverImage.decode()}catch{}}await sealReady;requestAnimationFrame(()=>body.classList.add('cover-art-ready'));};
 coverImage.onerror=()=>body.classList.add('cover-art-ready');
 const coverSource=document.querySelector('#initial-cover-art').textContent.match(/url\("([^"]+)"\)/);
-coverImage.src=coverSource?coverSource[1]:'assets/cover-luxe.webp';
+coverImage.src=coverSource?coverSource[1]:'/assets/cover-luxe.webp';
 
  void document.querySelector('.hero').offsetWidth;requestAnimationFrame(()=>body.classList.remove('replay-reset'));
  cover.classList.remove('gone','opening');document.querySelector('#toolbar').hidden=true;
@@ -59,12 +61,12 @@ function paintScratch(art){
 }
 let scratching=false,revealed=false,last=null,strokes=0;
 paintScratch();
-const heartArt=new Image();heartArt.onload=()=>{if(!strokes&&!revealed)paintScratch(heartArt)};heartArt.src='assets/heart-embossed.webp';
+const heartArt=new Image();heartArt.onload=()=>{if(!strokes&&!revealed)paintScratch(heartArt)};heartArt.src='/assets/heart-embossed.webp';
 function revealDate(){if(revealed)return;revealed=true;document.querySelector('.heart-wrap').classList.add('date-revealed');canvas.style.transition='opacity .7s';canvas.style.opacity='0';canvas.style.pointerEvents='none';document.querySelector('#scratch-hint').textContent='A beautiful day to begin forever.';document.querySelector('#reveal-date').hidden=true;}
 function point(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)*canvas.width/r.width,y:(e.clientY-r.top)*canvas.height/r.height};}
 function scratch(e){if(!scratching||revealed)return;e.preventDefault();const p=point(e);ctx.globalCompositeOperation='destination-out';ctx.lineWidth=55;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(last?last.x:p.x,last?last.y:p.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;if(++strokes%20===0){const data=ctx.getImageData(0,0,560,500).data;let left=0;for(let i=3;i<data.length;i+=40)if(data[i]>0)left++;if(left<5800)revealDate();}}
 canvas.addEventListener('pointerdown',e=>{scratching=true;canvas.setPointerCapture(e.pointerId);last=point(e);scratch(e)});canvas.addEventListener('pointermove',scratch);canvas.addEventListener('pointerup',()=>{scratching=false;last=null});canvas.addEventListener('pointercancel',()=>{scratching=false;last=null});document.querySelector('#reveal-date').addEventListener('click',revealDate);
-const weddingDate=new Date('2026-11-06T18:00:00+05:30');function tick(){let s=Math.max(0,Math.floor((weddingDate-Date.now())/1000));document.querySelector('#days').textContent=String(Math.floor(s/86400)).padStart(2,'0');document.querySelector('#hours').textContent=String(Math.floor(s/3600)%24).padStart(2,'0');document.querySelector('#minutes').textContent=String(Math.floor(s/60)%60).padStart(2,'0');document.querySelector('#seconds').textContent=String(s%60).padStart(2,'0');}tick();setInterval(tick,1000);
-document.querySelector('#rsvp').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));let saved=false;try{localStorage.setItem('afridi-wedding-rsvp',JSON.stringify(data));saved=true}catch{}const status=document.querySelector('#rsvp-result');status.hidden=false;status.textContent=saved?'Thank you, '+data.name+'! Your response has been saved.':'Your response could not be saved on this device. Please share your wishes directly with the couple.';status.scrollIntoView({behavior:'smooth',block:'center'});});
+const weddingDate=new Date(body.dataset.eventDate);function tick(){let s=Math.max(0,Math.floor((weddingDate-Date.now())/1000));document.querySelector('#days').textContent=String(Math.floor(s/86400)).padStart(2,'0');document.querySelector('#hours').textContent=String(Math.floor(s/3600)%24).padStart(2,'0');document.querySelector('#minutes').textContent=String(Math.floor(s/60)%60).padStart(2,'0');document.querySelector('#seconds').textContent=String(s%60).padStart(2,'0');}tick();setInterval(tick,1000);
+document.querySelector('#rsvp').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));let saved=false;try{localStorage.setItem('afridi-'+body.dataset.event+'-rsvp',JSON.stringify(data));saved=true}catch{}const status=document.querySelector('#rsvp-result');status.hidden=false;status.textContent=saved?'Thank you, '+data.name+'! Your response has been saved.':'Your response could not be saved on this device. Please share your wishes directly with the couple.';status.scrollIntoView({behavior:'smooth',block:'center'});});
 // A quiet original plucked melody; starts only on an explicit button press.
 let audioCtx,musicTimer,musicOn=false,step=0;const musicButton=document.querySelector('#music');const notes=[261.63,329.63,392,523.25,440,392,329.63,293.66];function playNote(){if(!musicOn)return;const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='sine';osc.frequency.value=notes[step++%notes.length];gain.gain.setValueAtTime(0,audioCtx.currentTime);gain.gain.linearRampToValueAtTime(.035,audioCtx.currentTime+.04);gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+2);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+2.1)}musicButton.addEventListener('click',async()=>{try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();musicOn=!musicOn;musicButton.setAttribute('aria-pressed',String(musicOn));musicButton.setAttribute('aria-label',musicOn?'Pause background music':'Play gentle background music');if(musicOn){playNote();musicTimer=setInterval(playNote,700)}else{clearInterval(musicTimer);await audioCtx.suspend();}}catch{musicButton.textContent='♪';musicButton.title='Music is unavailable in this browser';}});
