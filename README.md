@@ -3,7 +3,7 @@
 Two independent static invitations share the original curtain, floral artwork, scratch reveal, and music controls.
 
 - Nikah: `/` or `/nikah/`, Friday, 6 November 2026.
-- Dawat-e-Walima: `/walima/`, Sunday, 8 November 2026. The Walima hostname is routed here by `vercel.json`.
+- Dawat-e-Walima: `/walima/`, Saturday, 7 November 2026. The Walima hostname is routed here by `vercel.json`.
 - Both: after Namaz-e-Asar, from 5:00 PM onwards, Asia/Kolkata (IST).
 - Venue: ZIYON EVENTS Banquet Hall, Bata Chowk, Jammu Kashmir Bank, MG Road, Pune Cantonment, Pune, Maharashtra 411001.
 
