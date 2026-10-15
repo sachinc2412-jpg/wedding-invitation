@@ -150,3 +150,9 @@ footer h2{font-size:38px}
 .walima-invitation{--olive:#79633e;--ink:#614c35}.walima-invitation .families h2,.walima-invitation .events h2{color:#8a6940}.walima-invitation .family-card{border-color:#ba965278;background:linear-gradient(140deg,#fff7eab0,#e9d7ae50)}.walima-invitation .seal{color:#896533}.walima-invitation .hero-sub{color:#876539}.walima-invitation .countdown strong{color:#80673e}
 @media(max-width:400px){.hero-text{padding:132px 28px 0}h1>span{font-size:60px}h1>span b{font-size:21px}h1>span small{font-size:16px}.family-card h3{font-size:20px}.families,.blessing{padding-left:36px;padding-right:36px}.cover-foot>span{font-size:27px}.hero-sub{letter-spacing:1px}}
 @media(max-width:340px){h1>span{font-size:53px}.hero-text .intro{font-size:14px}.hero-text{padding-left:24px;padding-right:24px}.hero{min-height:780px}}
+
+/* RSVP network state stays clear without changing the invitation layout. */
+.rsvp-trap{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
++form[aria-busy="true"] button{opacity:.65;cursor:wait}
++#rsvp-result[data-state="error"]{color:#8f382f}#rsvp-result[data-state="success"]{color:#45553d}
++

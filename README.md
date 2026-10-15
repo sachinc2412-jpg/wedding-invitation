@@ -9,6 +9,10 @@ Two independent static invitations share the original curtain, floral artwork, s
 
 Calendar events use 11:30 UTC, equivalent to 17:00 IST. No end time has been supplied; the ICS events omit DTEND and the Google Calendar template uses a zero-duration event, with the open-ended timing in its description.
 
-RSVP responses remain local to each visitor's device, stored separately for Nikah and Walima; they are not sent to the couple.
+RSVPs are submitted to `/api/rsvp` and stored privately in the connected `afridi-wedding-rsvps` Vercel Blob store, under `rsvps/nikah/` and `rsvps/walima/`. Each JSON record includes event, name, attendance, guest count, message, and received timestamp. A stable random response ID allows guest edits/retries without duplicate records for that browser/event. Declined invitations count zero guests. There is no public response-list endpoint and no email/WhatsApp notification.
 
-Deploy the repository on Vercel using the included configuration. Output is `dist`; no build or install step is required.
+To review responses, open the Vercel project's Storage tab, select `afridi-wedding-rsvps`, and browse the event folder. The store is private; downloads require your Vercel account. Existing device-only responses are not silently uploaded.
+
+The project connection supplies `BLOB_READ_WRITE_TOKEN` to the server. Never add it to HTML, browser JavaScript, or Git. Run `npm test` to verify validation, private storage writes, retry handling, separate events, and failure behavior.
+
+Deploy the repository on Vercel using the included configuration. Output is `dist`; no frontend build is required. Vercel runs `npm ci --ignore-scripts` for the Node API dependency.

@@ -67,6 +67,40 @@ function point(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.
 function scratch(e){if(!scratching||revealed)return;e.preventDefault();const p=point(e);ctx.globalCompositeOperation='destination-out';ctx.lineWidth=55;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(last?last.x:p.x,last?last.y:p.y);ctx.lineTo(p.x,p.y);ctx.stroke();last=p;if(++strokes%20===0){const data=ctx.getImageData(0,0,560,500).data;let left=0;for(let i=3;i<data.length;i+=40)if(data[i]>0)left++;if(left<5800)revealDate();}}
 canvas.addEventListener('pointerdown',e=>{scratching=true;canvas.setPointerCapture(e.pointerId);last=point(e);scratch(e)});canvas.addEventListener('pointermove',scratch);canvas.addEventListener('pointerup',()=>{scratching=false;last=null});canvas.addEventListener('pointercancel',()=>{scratching=false;last=null});document.querySelector('#reveal-date').addEventListener('click',revealDate);
 const weddingDate=new Date(body.dataset.eventDate);function tick(){let s=Math.max(0,Math.floor((weddingDate-Date.now())/1000));document.querySelector('#days').textContent=String(Math.floor(s/86400)).padStart(2,'0');document.querySelector('#hours').textContent=String(Math.floor(s/3600)%24).padStart(2,'0');document.querySelector('#minutes').textContent=String(Math.floor(s/60)%60).padStart(2,'0');document.querySelector('#seconds').textContent=String(s%60).padStart(2,'0');}tick();setInterval(tick,1000);
-document.querySelector('#rsvp').addEventListener('submit',e=>{e.preventDefault();const data=Object.fromEntries(new FormData(e.target));let saved=false;try{localStorage.setItem('afridi-'+body.dataset.event+'-rsvp',JSON.stringify(data));saved=true}catch{}const status=document.querySelector('#rsvp-result');status.hidden=false;status.textContent=saved?'Thank you, '+data.name+'! Your response has been saved.':'Your response could not be saved on this device. Please share your wishes directly with the couple.';status.scrollIntoView({behavior:'smooth',block:'center'});});
+// Send each RSVP to private, durable storage. An ID makes retries safe.
+const rsvpForm=document.querySelector('#rsvp');
+const guestSelect=document.querySelector('#guests');
+let responseId;
+function getResponseId(){
+ if(responseId)return responseId;
+ const key='afridi-'+body.dataset.event+'-response-id';
+ try{responseId=localStorage.getItem(key)}catch{}
+ if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(responseId||'')){
+  responseId=crypto.randomUUID();try{localStorage.setItem(key,responseId)}catch{}
+ }
+ return responseId;
+}
+function updateGuestChoice(){guestSelect.disabled=rsvpForm.elements.attending.value==='no';}
+rsvpForm.querySelectorAll('[name="attending"]').forEach(radio=>radio.addEventListener('change',updateGuestChoice));
+updateGuestChoice();
+rsvpForm.addEventListener('submit',async e=>{
+ e.preventDefault();
+ const button=rsvpForm.querySelector('[type="submit"]');if(button.disabled)return;
+ const data=Object.fromEntries(new FormData(rsvpForm));
+ const status=document.querySelector('#rsvp-result');status.hidden=false;status.dataset.state='pending';status.textContent='Sending your RSVP…';
+ button.disabled=true;button.textContent='Sending…';rsvpForm.setAttribute('aria-busy','true');
+ let sent=false;const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),20000);
+ try{
+  const id=getResponseId();
+  const response=await fetch('/api/rsvp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,event:body.dataset.event,name:data.name,attending:data.attending,guests:data.attending==='yes'?parseInt(data.guests,10):0,message:data.message||'',website:data.website||''}),signal:controller.signal});
+  const result=await response.json();
+  if(!response.ok||result.ok!==true||result.id!==id)throw new Error(result.error||'Your response could not be sent. Please try again.');
+  sent=true;status.dataset.state='success';status.textContent='Thank you, '+data.name.trim()+'! Your RSVP has been received.';
+ }catch(error){
+  status.dataset.state='error';status.textContent=error.name==='AbortError'?'The connection took too long. Please try again.':(error.message==='Failed to fetch'?'Please check your internet connection and try again.':error.message);
+ }finally{
+  clearTimeout(timeout);button.disabled=false;button.textContent=sent?'Update RSVP ↗':'Send RSVP ↗';rsvpForm.removeAttribute('aria-busy');status.scrollIntoView({behavior:'smooth',block:'center'});
+ }
+});
 // A quiet original plucked melody; starts only on an explicit button press.
 let audioCtx,musicTimer,musicOn=false,step=0;const musicButton=document.querySelector('#music');const notes=[261.63,329.63,392,523.25,440,392,329.63,293.66];function playNote(){if(!musicOn)return;const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type='sine';osc.frequency.value=notes[step++%notes.length];gain.gain.setValueAtTime(0,audioCtx.currentTime);gain.gain.linearRampToValueAtTime(.035,audioCtx.currentTime+.04);gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+2);osc.connect(gain);gain.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+2.1)}musicButton.addEventListener('click',async()=>{try{if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();await audioCtx.resume();musicOn=!musicOn;musicButton.setAttribute('aria-pressed',String(musicOn));musicButton.setAttribute('aria-label',musicOn?'Pause background music':'Play gentle background music');if(musicOn){playNote();musicTimer=setInterval(playNote,700)}else{clearInterval(musicTimer);await audioCtx.suspend();}}catch{musicButton.textContent='♪';musicButton.title='Music is unavailable in this browser';}});
