@@ -22,6 +22,9 @@
   "functions": {
     "api/rsvp.js": {
       "maxDuration": 30
+    },
+    "api/rsvp-sync.js": {
+      "maxDuration": 60
     }
   }
 }
