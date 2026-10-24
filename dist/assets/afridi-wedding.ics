@@ -1,17 +1,21 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//Afridi Wedding Invitation//EN
+PRODID:-//Afridi and Sauleha//Wedding Invitation//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 UID:afridi-wedding-20261106@invitation.local
-DTSTAMP:20261007T114600Z
-DTSTART:20261106T123000Z
-DTEND:20261106T153000Z
-SUMMARY:Afridi & Bride - Wedding
-DESCRIPTION:Join us to celebrate the wedding of Afridi and Bride.\nNikah: 6
- :00 PM. Dinner: 7:30 PM. India time (IST\, UTC+5:30).
-LOCATION:Wedding venue name\, India
+DTSTAMP:20261024T120000Z
+SEQUENCE:1
+DTSTART:20261106T133000Z
+SUMMARY:Nikah Ceremony — Afridi Salim Sayyed & Sauleha (Dua) Rashid Khan
+LOCATION:ZIYON EVENTS Banquet Hall\, Bata Chowk\, Jammu Kashmir Bank\, MG R
+ oad\, Pune Cantonment\, Pune\, Maharashtra 411001
+DESCRIPTION:Nikah Ceremony (Wedding) of Afridi Salim Sayyed & Sauleha (Dua)
+  Rashid Khan. After Namaz-e-Asar\, from 7:00 PM onwards (Indian Standard T
+ ime\, UTC+05:30). End time is not specified. Venue: ZIYON EVENTS Banquet H
+ all. Bata Chowk\, Jammu Kashmir Bank\, MG Road\, Pune Cantonment\, Pune\, 
+ Maharashtra 411001.
 STATUS:CONFIRMED
 END:VEVENT
 END:VCALENDAR
